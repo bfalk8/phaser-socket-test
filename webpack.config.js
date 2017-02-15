@@ -27,6 +27,7 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: 'vendor.bundle.js'})
   ],
   resolve: {
+    modules: [path.resolve(__dirname, 'client'), 'node_modules'],
     alias: {
       'phaser': phaser,
       'pixi': pixi,
@@ -54,18 +55,17 @@ module.exports = {
         use: ['expose-loader?p2']
       },
       { test: /\.woff|\.woff2|\.svg|.eot|\.ttf/,
-        use: 'url-loader?prefix=font/&limit=10000&name=[name]-[hash].[ext]' },
+        use: 'url-loader?prefix=font/&limit=10000&name=[name].[ext]' },
       { test: /\.mp3$/,
-        use: 'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]' },
+        use: 'file-loader?hash=sha512&digest=hex&name=[name].[ext]' },
       { test: /.*\.(gif|png|svg)$/i,
         use: [
-          'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]',
-          'image-webpack-loader?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}'
+          'file-loader?hash=sha512&digest=hex&name=[name].[ext]',
         ]},
       { test: /\.(jpg)$/,
-        use: 'url-loader?limit=25000&name=[name]-[hash].[ext]'},
+        use: 'url-loader?limit=25000&name=[name].[ext]'},
       { test: /\.xml$/,
-        use: 'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]'}
+        use: 'file-loader?hash=sha512&digest=hex&name=[name].[ext]'}
     ]
   },
 };

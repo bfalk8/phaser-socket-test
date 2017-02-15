@@ -1,26 +1,23 @@
-import ManifestLoader from 'phaser-manifest-loader/src/ManifestLoader';
 import Phaser from 'phaser';
-import manifest from '../manifest.js';
+import manifest from 'manifest.js';
 
 export default class Loader extends Phaser.State {
-  create() {
-    this.manifestLoader = this.game.plugins.add(ManifestLoader)
-    Promise.all([
-      this.manifestLoader.loadManifest(manifest),
-      this.startLoadingAnimation()
-    ]).then(() => {
-      this.game.state.start('Game')
-    });
+  preload() {
+    this.loaderBg = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loadBg');
+    this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'loadBar');
+    [this.loaderBg, this.loaderBar].forEach((elem) => elem.anchor.setTo(0.5));
+
+    this.load.setPreloadSprite(this.loaderBar);
+    // load everything from manifest
+    Object.keys(manifest).forEach(assetType => manifest[assetType].forEach(asset => {
+        let item = require(`assets/${assetType}/${asset[1]}`);
+        let name = asset[0];
+        this.game.load.image(name, item);
+      })
+    );
   }
 
-  startLoadingAnimation () {
-    return new Promise((resolve, reject) => {
-      const spinner = this.add.image(this.world.centerX, this.world.centerY, 'loader')
-      spinner.anchor.set(0.5)
-      this.add.tween(spinner).to({angle: 360}, 1000, 'Linear', true, 0, -1, false)
-      setTimeout(() => {
-        resolve()
-      }, 2000)
-    });
+  create() {
+    this.state.start('Game');
   }
 }

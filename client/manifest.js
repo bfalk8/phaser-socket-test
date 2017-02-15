@@ -1,5 +1,5 @@
 const manifest = {
-  images: ['loader-bg', 'loader-bar'],
+  images: [['test','test.png']],
   spritesheets: [],
   audio: [],
   fonts: [],
