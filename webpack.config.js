@@ -8,6 +8,7 @@ var p2 = path.join(phaserModule, 'build/custom/p2.js');
 
 var APP_DIR = path.join(__dirname, 'client');
 var BUILD_DIR = path.join(__dirname, 'public');
+var ASSETS_DIR = path.join(__dirname, 'assets');
 
 module.exports = {
   entry: {
@@ -29,7 +30,8 @@ module.exports = {
     alias: {
       'phaser': phaser,
       'pixi': pixi,
-      'p2': p2
+      'p2': p2,
+      'assets': ASSETS_DIR
     }
   },
   module: {
@@ -50,7 +52,20 @@ module.exports = {
       {
         test: /p2\.js/,
         use: ['expose-loader?p2']
-      }
+      },
+      { test: /\.woff|\.woff2|\.svg|.eot|\.ttf/,
+        use: 'url-loader?prefix=font/&limit=10000&name=[name]-[hash].[ext]' },
+      { test: /\.mp3$/,
+        use: 'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]' },
+      { test: /.*\.(gif|png|svg)$/i,
+        use: [
+          'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]',
+          'image-webpack-loader?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}'
+        ]},
+      { test: /\.(jpg)$/,
+        use: 'url-loader?limit=25000&name=[name]-[hash].[ext]'},
+      { test: /\.xml$/,
+        use: 'file-loader?hash=sha512&digest=hex&name=[name]-[hash].[ext]'}
     ]
   },
 };
