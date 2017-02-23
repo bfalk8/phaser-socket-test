@@ -1,5 +1,5 @@
 const manifest = {
-  images: [['test','test.png']],
+  images: [],
   spritesheets: [],
   audio: [],
   fonts: [],
