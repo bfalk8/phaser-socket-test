@@ -24,7 +24,7 @@ export default class Player extends Phaser.Sprite {
     this.body.velocity.x = velocity.x;
     this.body.velocity.y = velocity.y;
     // TODO: changed this to user Phaser's Signal system
-    this.game.socketHandler.sendMessage('update', 
+    this.game.socketHandler.send('update', 
       {
         x: this.x,
         y: this.y,

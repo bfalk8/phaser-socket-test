@@ -3,6 +3,7 @@ export default class SocketHandler {
     let HOST = location.origin.replace(/^http/, 'ws')
     this.ws = new WebSocket(HOST);
     console.log(HOST);
+    this.listeners = {};
     this.ws.onopen = this.handleOpen.bind(this);
     this.ws.onmessage = this.handleMessage.bind(this);
     this.socketFunc = socketFunc;
@@ -13,10 +14,21 @@ export default class SocketHandler {
   }
 
   handleMessage(event) {
-    this.socketFunc(JSON.parse(event.data));
+    let message = JSON.parse(event.data);
+    // this.socketFunc(message);
+    if(this.listeners[message.type])
+      this.listeners[message.type](message.payload);
   }
 
-  sendMessage(event, payload) {
-    this.ws.send(JSON.stringify({event: event, payload: payload}));
+  on(type, func) {
+    this.listeners[type] = func;
+  }
+
+  removeListener(type, func) {
+    delete this.listeners[type];
+  }
+
+  send(type, payload) {
+    this.ws.send(JSON.stringify({type: type, payload: payload}));
   }
 }

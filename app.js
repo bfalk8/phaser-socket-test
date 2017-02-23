@@ -23,28 +23,28 @@ wss.on('connection', (ws) => {
 
   game.addPlayer(ws.id);
 
-  ws.send(JSON.stringify({event: 'init', payload: {id: ws.id, players: game.players}}));
+  ws.send(JSON.stringify({type: 'init', payload: {id: ws.id, players: game.players}}));
   wss.clients.forEach((client) => client.send(JSON.stringify({
-    event: 'newPlayer', payload: {id: ws.id, player: game.players[ws.id]}
+    type: 'newPlayer', payload: {id: ws.id, player: game.players[ws.id]}
   })));
 
   ws.on('close', () => {
     console.log(`Client ${ws.id} disconnected`);
     game.removePlayer(ws.id);
     wss.clients.forEach((client) => client.send(JSON.stringify({
-      event: 'removePlayer', payload: {id: ws.id}
+      type: 'removePlayer', payload: {id: ws.id}
     })));
   });
 
   ws.on('message', (message) => {
     let msg = JSON.parse(message);
 
-    switch(msg.event) {
+    switch(msg.type) {
       case 'update':
         game.updatePlayer(ws.id, msg.payload);
         let temp = game.players[ws.id];
         temp.id = ws.id;
-        let updateMsg = JSON.stringify({event: 'update', payload: temp});
+        let updateMsg = JSON.stringify({type: 'update', payload: temp});
         wss.clients.forEach((client) => client.send(updateMsg));
         break;
     }
