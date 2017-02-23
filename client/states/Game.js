@@ -10,6 +10,11 @@ export default class Game extends Phaser.State {
     this.physics.setBoundsToWorld();
     this.players = {};
     this.game.socketHandler = new SocketHandler(this.handleSocket.bind(this));
+    this.remoteGroup = new Phaser.Group(this.game);
+  }
+
+  update() {
+    this.physics.arcade.collide(this.player, this.remoteGroup);
   }
 
   handleSocket(message) {
@@ -26,6 +31,7 @@ export default class Game extends Phaser.State {
             this.players[elem] = new RemotePlayer({
               game: this.game,x: payload.players[elem].x, y: payload.players[elem].y
             });
+            this.remoteGroup.add(this.players[elem]);
           }
         });
         break;
@@ -40,6 +46,12 @@ export default class Game extends Phaser.State {
           this.players[payload.id] = new RemotePlayer({
             game: this.game,x: payload.player.x, y:payload.player.y
           });
+        this.remoteGroup.add(this.players[payload.id]);
+        break;
+
+      case 'removePlayer':
+        this.players[payload.id].destroy();
+        delete this.players[payload.id];
         break;
 
       default:

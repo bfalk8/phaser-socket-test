@@ -31,6 +31,9 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     console.log(`Client ${ws.id} disconnected`);
     game.removePlayer(ws.id);
+    wss.clients.forEach((client) => client.send(JSON.stringify({
+      event: 'removePlayer', payload: {id: ws.id}
+    })));
   });
 
   ws.on('message', (message) => {
