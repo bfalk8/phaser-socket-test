@@ -28,6 +28,7 @@
     "express": "^4.14.1",
     "phaser-ce": "^2.7.3",
     "utf-8-validate": "^3.0.1",
+    "uws": "^0.13.0",
     "ws": "^2.0.3"
   },
   "devDependencies": {
