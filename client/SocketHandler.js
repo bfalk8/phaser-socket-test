@@ -1,12 +1,11 @@
 export default class SocketHandler {
-  constructor(socketFunc) {
+  constructor() {
     let HOST = location.origin.replace(/^http/, 'ws')
     this.ws = new WebSocket(HOST);
     console.log(HOST);
     this.listeners = {};
     this.ws.onopen = this.handleOpen.bind(this);
     this.ws.onmessage = this.handleMessage.bind(this);
-    this.socketFunc = socketFunc;
   }
 
   handleOpen() {
@@ -15,8 +14,7 @@ export default class SocketHandler {
 
   handleMessage(event) {
     let message = JSON.parse(event.data);
-    // this.socketFunc(message);
-    if(this.listeners[message.type])
+    if(this.listeners.hasOwnProperty(message.type))
       this.listeners[message.type](message.payload);
   }
 

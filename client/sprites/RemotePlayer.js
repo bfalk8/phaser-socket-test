@@ -1,14 +1,11 @@
 import Phaser from 'phaser';
+import Player from 'sprites/Player.js';
 
-export default class RemotePlayer extends Phaser.Sprite {
+export default class RemotePlayer extends Player {
   constructor({game, x = 0, y = 0, asset}) {
-    let graphic = game.make.bitmapData(75,175);
-    graphic.rect(0,0,75,175,'#f47a42');
-    super(game, x, y, graphic);
-    this.anchor.setTo(0.5);
-    game.add.existing(this);
-    game.physics.arcade.enable(this);
-    this.body.gravity.y = 0;
+    let graphic = game.make.bitmapData(32,32);
+    graphic.rect(0,0,32,32,'#f47a42');
+    super({game: game, x: x, y: y, asset: asset || graphic});
   }
 
   update() {
